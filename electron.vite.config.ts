@@ -1,4 +1,4 @@
-import { join, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig, externalizeDepsPlugin } from 'electron-vite';
 
@@ -14,7 +14,7 @@ export default defineConfig({
     plugins: [react()],
     resolve: {
       alias: {
-        '@renderer': resolve(join(__dirname, 'src', 'renderer', 'src'))
+        '@renderer': resolve('src', 'renderer', 'src')
       }
     },
     server: {
@@ -22,7 +22,6 @@ export default defineConfig({
       open: true
     },
     build: {
-      outDir: join(__dirname, 'dist', 'desktop'),
       minify: true,
       manifest: false
     }
