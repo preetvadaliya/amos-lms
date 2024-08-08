@@ -54,7 +54,10 @@ export function Router() {
   useEffect(() => {
     if (!supabase) return;
     supabase.auth.onAuthStateChange((event, _) => {
-      if (event === 'INITIAL_SESSION' && !_?.user) router.navigate('/login', { replace: true });
+      const { pathname } = router.state.location;
+      if (event === 'INITIAL_SESSION' && !_?.user && pathname === '/') {
+        router.navigate('/login', { replace: true });
+      }
       if (event === 'SIGNED_OUT') router.navigate('/login', { replace: true });
       if (event === 'SIGNED_IN') router.navigate('/', { replace: true });
     });
