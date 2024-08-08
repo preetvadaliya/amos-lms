@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Supabase } from './helpers';
+import { Supabase, User } from './helpers';
 import {
   AuthLayout,
   Course,
@@ -18,6 +18,7 @@ import {
 export function Router() {
   const [isLoading, setIsLoading] = useState(true);
   const [supabase, setSupabase] = useAtom(Supabase);
+  const setUser = useSetAtom(User);
 
   const router = useMemo(() => {
     return createBrowserRouter([
@@ -25,7 +26,7 @@ export function Router() {
         path: '/',
         Component: MainLayout,
         children: [
-          { path: 'home', Component: Home },
+          { path: 'home', Component: Home, index: true },
           { path: 'my-course', Component: Course },
           { path: 'dashboard', Component: Dashboard }
         ]
@@ -53,13 +54,12 @@ export function Router() {
 
   useEffect(() => {
     if (!supabase) return;
-    supabase.auth.onAuthStateChange((event, _) => {
-      const { pathname } = router.state.location;
-      if (event === 'INITIAL_SESSION' && !_?.user && pathname === '/') {
-        router.navigate('/login', { replace: true });
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === 'SIGNED_OUT') await router.navigate('/login', { replace: true });
+      if (event === 'SIGNED_IN') {
+        setUser(session?.user || null);
+        await router.navigate('/home', { replace: true });
       }
-      if (event === 'SIGNED_OUT') router.navigate('/login', { replace: true });
-      if (event === 'SIGNED_IN') router.navigate('/', { replace: true });
     });
     setIsLoading(false);
   }, [supabase]);
