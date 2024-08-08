@@ -1,6 +1,6 @@
 import { IconButton, InputAdornment, TextField, type TextFieldProps } from '@mui/material';
 import { IconEye, IconEyeClosed } from '@tabler/icons-react';
-import { useField, useFormikContext } from 'formik';
+import { Form, useField, useFormikContext } from 'formik';
 import { type ChangeEvent, useCallback, useMemo, useState } from 'react';
 import type React from 'react';
 
@@ -43,6 +43,27 @@ export function TextInput(props: TextInputProps & TextFieldProps) {
     }
     return null;
   }, [type, fieldType, togglePasswordVisibility]);
+
+  if (type === 'password') {
+    return (
+      <Form>
+        <TextField
+          {...field}
+          {...rest}
+          type={fieldType}
+          helperText={meta.touched && meta.error ? meta.error : ''}
+          error={meta.touched && Boolean(meta.error)}
+          value={field.value ?? ''}
+          onChange={onChange}
+          onKeyDown={handleKeyPress}
+          InputProps={{
+            ...InputProps,
+            endAdornment
+          }}
+        />
+      </Form>
+    );
+  }
 
   return (
     <TextField
