@@ -27,9 +27,11 @@ const typography: TypographyOptions = {
 declare module '@mui/material' {
   interface PaletteOptions {
     github: PaletteColorOptions;
+    google: PaletteColorOptions;
   }
   interface ButtonPropsColorOverrides {
     github: true;
+    google: true;
   }
 }
 
@@ -37,6 +39,10 @@ const lightPalette: PaletteOptions = {
   mode: 'light',
   github: {
     main: '#333',
+    contrastText: '#FFFFFF'
+  },
+  google: {
+    main: '#4285F4',
     contrastText: '#FFFFFF'
   },
   primary: {
