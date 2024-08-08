@@ -46,14 +46,12 @@ export function LogIn() {
       return;
     }
     try {
-      const { error, data } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: { redirectTo: window.location.origin }
       });
-      console.log(data);
       if (error) throw error;
       enqueueSnackbar('Logged in successfully', { variant: 'success' });
-      navigate('/');
     } catch (error) {
       enqueueSnackbar((error as PostgrestError).message, { variant: 'error' });
     }
