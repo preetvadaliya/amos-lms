@@ -18,6 +18,7 @@ export function AppBar() {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
       enqueueSnackbar('Logged out successfully', { variant: 'success' });
+      navigate('/login');
     } catch (error) {
       console.error('Failed to logout:', error);
       enqueueSnackbar((error as PostgrestError).message, { variant: 'error' });

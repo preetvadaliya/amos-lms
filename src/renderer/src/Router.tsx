@@ -61,7 +61,7 @@ export function Router() {
     const { data } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
       const user = session?.user;
       setUser(user || null);
-      if (!user && event === 'SIGNED_OUT') await router.navigate('/login', { replace: true });
+      if (event === 'SIGNED_OUT') await router.navigate('/login', { replace: true });
     });
     setIsLoading(false);
     return () => {

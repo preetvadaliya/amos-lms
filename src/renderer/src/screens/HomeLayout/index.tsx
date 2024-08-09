@@ -7,13 +7,22 @@ import {
   type NavigationItem,
   NavigationRail
 } from '@renderer/components';
-import { useTitle } from '@renderer/hooks';
+import { useTitle, useUser } from '@renderer/hooks';
 import { IconHome } from '@tabler/icons-react';
-import { useOutlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate, useOutlet } from 'react-router-dom';
 
 export function HomeLayout() {
   useTitle('Home');
   const Outlet = useOutlet();
+  const user = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login', { 'replace': true });
+    }
+  }, [user]);
 
   const navigationItems: NavigationItem[] = [
     {
