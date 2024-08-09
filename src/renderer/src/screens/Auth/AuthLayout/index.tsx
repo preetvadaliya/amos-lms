@@ -10,7 +10,7 @@ export function AuthLayout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user) navigate('/home', { replace: true });
+    if (user) navigate('/', { replace: true });
   }, [user]);
 
   return (

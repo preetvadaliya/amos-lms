@@ -29,6 +29,7 @@ export function LogIn() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       enqueueSnackbar('Logged in successfully', { variant: 'success' });
+      navigate('/', { replace: true });
     } catch (error) {
       enqueueSnackbar((error as PostgrestError).message, { variant: 'error' });
     }
