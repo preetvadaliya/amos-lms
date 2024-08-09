@@ -1,13 +1,8 @@
-import { Button, Divider, Grid, InputAdornment, Link, Stack, Typography } from '@mui/material';
+import { Grid, InputAdornment, Link, Stack, Typography } from '@mui/material';
 import { SubmitButton, TextInput } from '@renderer/components';
 import { useSupabase, useTitle } from '@renderer/hooks';
 import type { PostgrestError } from '@supabase/supabase-js';
-import {
-  IconAt,
-  IconBrandGithubFilled,
-  IconBrandGoogleFilled,
-  IconFingerprint
-} from '@tabler/icons-react';
+import { IconAt, IconFingerprint } from '@tabler/icons-react';
 import { Formik } from 'formik';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
@@ -32,24 +27,6 @@ export function LogIn() {
     }
     try {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      enqueueSnackbar('Logged in successfully', { variant: 'success' });
-      navigate('/');
-    } catch (error) {
-      enqueueSnackbar((error as PostgrestError).message, { variant: 'error' });
-    }
-  };
-
-  const onLogInWithGithub = async () => {
-    if (!supabase) {
-      enqueueSnackbar('Supabase client is not initialized', { variant: 'error' });
-      return;
-    }
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'github',
-        options: { redirectTo: window.location.origin }
-      });
       if (error) throw error;
       enqueueSnackbar('Logged in successfully', { variant: 'success' });
     } catch (error) {
@@ -122,28 +99,6 @@ export function LogIn() {
           </Grid>
         </Grid>
       </Formik>
-      <Divider orientation={'horizontal'} variant={'middle'} flexItem={true}>
-        <Typography variant={'body2'}>Continue with</Typography>
-      </Divider>
-      <Stack direction={'row'} justifyContent={'center'} alignItems={'center'} spacing={2}>
-        <Button
-          variant={'contained'}
-          fullWidth={true}
-          color={'google'}
-          startIcon={<IconBrandGoogleFilled size={20} />}
-        >
-          LogIn with Google
-        </Button>
-        <Button
-          variant={'contained'}
-          fullWidth={true}
-          color={'github'}
-          startIcon={<IconBrandGithubFilled size={20} />}
-          onClick={onLogInWithGithub}
-        >
-          LogIn with GitHub
-        </Button>
-      </Stack>
     </Stack>
   );
 }
