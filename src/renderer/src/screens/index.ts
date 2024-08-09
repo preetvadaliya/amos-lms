@@ -3,4 +3,5 @@ export * from './Course';
 export * from './Dashboard';
 export * from './Home';
 export * from './Loading';
-export * from './MainLayout';
+export * from './HomeLayout';
+export * from './Profile';
