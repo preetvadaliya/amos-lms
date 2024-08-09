@@ -1,17 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
+import { IconHome, IconUser } from '@tabler/icons-react';
 import { useAtom, useSetAtom } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { Supabase, User } from './helpers';
 import {
   AuthLayout,
-  Course,
-  Dashboard,
   ForgotPassword,
-  Home,
+  HomeLayout,
   Loading,
   LogIn,
-  MainLayout,
+  Profile,
   ResetPassword
 } from './screens';
 
@@ -24,11 +23,20 @@ export function Router() {
     return createBrowserRouter([
       {
         path: '/',
-        Component: MainLayout,
+        Component: HomeLayout,
+        handle: {
+          crumbIcon: IconHome,
+          crumbLabel: 'Home'
+        },
         children: [
-          { path: 'home', Component: Home, index: true },
-          { path: 'my-course', Component: Course },
-          { path: 'dashboard', Component: Dashboard }
+          {
+            path: 'user/:uId',
+            Component: Profile,
+            handle: {
+              crumbIcon: IconUser,
+              crumbLabel: 'Profile'
+            }
+          }
         ]
       },
       {
@@ -41,7 +49,7 @@ export function Router() {
         ]
       }
     ]);
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     if (supabase) return;
@@ -50,19 +58,18 @@ export function Router() {
       process.env.VITE_SUPABASE_ANON_KEY || ''
     );
     setSupabase(supabaseClient);
-  }, []);
-
-  useEffect(() => {
-    if (!supabase) return;
-    supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_OUT') await router.navigate('/login', { replace: true });
-      if (event === 'SIGNED_IN' && session?.user) {
-        setUser(session.user);
-        await router.navigate('/home', { replace: true });
-      }
+    const { data } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      const user = session?.user;
+      setUser(user || null);
+      if (!user && event === 'SIGNED_OUT') await router.navigate('/login', { replace: true });
     });
     setIsLoading(false);
-  }, [supabase]);
+    return () => {
+      data.subscription.unsubscribe();
+      setSupabase(null);
+      setUser(null);
+    };
+  }, []);
 
   if (isLoading)
     return <Loading primaryMessage='Please Wait...' secondaryMessage='Getting User Information' />;
