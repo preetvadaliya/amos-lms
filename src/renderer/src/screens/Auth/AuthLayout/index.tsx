@@ -1,18 +1,9 @@
 import { Divider, Stack } from '@mui/material';
 import LogInImage from '@renderer/assets/login.png';
 import { FitParentLayout } from '@renderer/components';
-import { useUser } from '@renderer/hooks';
-import { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 export function AuthLayout() {
-  const user = useUser();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) navigate('/', { replace: true });
-  }, [user]);
-
   return (
     <FitParentLayout direction={'row'} alignItems={'center'} justifyContent={'center'}>
       <Stack direction={'column'} justifyContent={'center'} alignItems={'center'} flex={1} px={16}>
