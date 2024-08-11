@@ -9,7 +9,7 @@ export function AppBar() {
   const supabase = useSupabase();
   const navigate = useNavigate();
   const location = useLocation();
-  const user = useUser();
+  const { user } = useUser();
   const { enqueueSnackbar } = useSnackbar();
 
   const onLogout = async () => {
