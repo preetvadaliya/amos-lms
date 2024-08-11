@@ -1,9 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
 import { IconHome, IconUser } from '@tabler/icons-react';
-import { useAtom, useSetAtom } from 'jotai';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import { Supabase, User } from './helpers';
+import { useUser } from './hooks';
 import {
   AuthLayout,
   ForgotPassword,
@@ -15,10 +13,7 @@ import {
 } from './screens';
 
 export function Router() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [supabase, setSupabase] = useAtom(Supabase);
-  const setUser = useSetAtom(User);
-
+  const { isGettingUser, user } = useUser();
   const router = useMemo(() => {
     return createBrowserRouter([
       {
@@ -49,29 +44,14 @@ export function Router() {
         ]
       }
     ]);
-  }, [supabase]);
-
-  useEffect(() => {
-    if (supabase) return;
-    const supabaseClient = createClient(
-      process.env.VITE_SUPABASE_URL || '',
-      process.env.VITE_SUPABASE_ANON_KEY || ''
-    );
-    setSupabase(supabaseClient);
-    const { data } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
-      const user = session?.user;
-      setUser(user || null);
-      if (event === 'SIGNED_OUT') await router.navigate('/login', { replace: true });
-    });
-    setIsLoading(false);
-    return () => {
-      data.subscription.unsubscribe();
-      setSupabase(null);
-      setUser(null);
-    };
   }, []);
 
-  if (isLoading)
+  useEffect(() => {
+    if (isGettingUser) return;
+    if (!user) router.navigate('/login');
+  }, [isGettingUser, user]);
+
+  if (isGettingUser)
     return <Loading primaryMessage='Please Wait...' secondaryMessage='Getting User Information' />;
   return <RouterProvider router={router} />;
 }
