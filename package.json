@@ -24,6 +24,13 @@
     "biome-all": "biome check --write ."
   },
   "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/delimiter": "^1.4.0",
+    "@editorjs/editorjs": "^2.30.4",
+    "@editorjs/header": "^2.8.7",
+    "@editorjs/link": "^2.6.2",
+    "@editorjs/list": "^1.10.0",
+    "@editorjs/paragraph": "^2.11.6",
     "@electron-toolkit/preload": "^3.0.0",
     "@electron-toolkit/utils": "^3.0.0",
     "@emotion/react": "^11.11.4",
@@ -43,6 +50,7 @@
     "jotai": "^2.9.1",
     "mui-tel-input": "^5.1.2",
     "notistack": "^3.0.1",
+    "octokit": "^4.0.2",
     "react-router-dom": "^6.23.1",
     "styled-components": "^6.1.11",
     "yup": "^1.4.0"
